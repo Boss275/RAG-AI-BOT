@@ -1,4 +1,4 @@
-from langchain.document_loaders import PyPDFLoader, TextLoader, Docx2txtLoader
+from langchain_community.document_loaders import PyPDFLoader, TextLoader, Docx2txtLoader
 from langchain.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chains import RetrievalQA
@@ -14,16 +14,17 @@ def load_documents(file_paths):
         elif path.endswith(".docx"):
             loader = Docx2txtLoader(path)
         else:
-            continue
-        all_docs.extend(loader.load())
+            continue  # Skip unsupported file types
+        docs = loader.load()
+        all_docs.extend(docs)
     return all_docs
 
 def build_vectorstore(documents):
     embeddings = OpenAIEmbeddings()
-    vectordb = FAISS.from_documents(documents, embeddings)
-    return vectordb
+    return FAISS.from_documents(documents, embeddings)
 
-def get_qa_chain(vectordb):
-    retriever = vectordb.as_retriever()
-    llm = OpenAI(temperature=0)
-    return RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
+def get_qa_chain(vectorstore):
+    return RetrievalQA.from_chain_type(
+        llm=OpenAI(temperature=0),
+        retriever=vectorstore.as_retriever()
+    )
