@@ -40,9 +40,9 @@ if uploaded_files:
 
 
 
-!pip install -q streamlit langchain openai faiss-cpu pypdf python-docx tiktoken
-!pip install -U langchain langchain-community google-generativeai faiss-cpu pypdf python-docx tiktoken
-!pip install -U langchain-community
+pip install -q streamlit langchain openai faiss-cpu pypdf python-docx tiktoken
+pip install -U langchain langchain-community google-generativeai faiss-cpu pypdf python-docx tiktoken
+pip install -U langchain-community
 
 import os
 from langchain.document_loaders import PyPDFLoader, TextLoader, Docx2txtLoader
